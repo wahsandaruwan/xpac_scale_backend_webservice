@@ -124,7 +124,7 @@ const LoginUser = async (req, res) => {
 // ----------Conroller function to get all user ----------
 const getAllCustomers = async (req, res) => {
   try {
-    const customers = await User.aggregate([
+    const customers = await UserModel.aggregate([
       {
         $match: {
           userType: "customer",
