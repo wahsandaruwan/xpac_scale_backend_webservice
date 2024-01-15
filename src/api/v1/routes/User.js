@@ -20,7 +20,12 @@ router.post("/register", RegisterUser);
 router.post("/login", LoginUser);
 
 // Get user by id
-router.get("/:userId", AuthenticateUser, AuthorizeUser(["admin"]), GetUserById);
+router.get(
+  "/one/:userId",
+  AuthenticateUser,
+  AuthorizeUser(["admin"]),
+  GetUserById
+);
 router.get("/all", AuthenticateUser, AuthorizeUser(["admin"]), getAllCustomers);
 
 module.exports = router;
