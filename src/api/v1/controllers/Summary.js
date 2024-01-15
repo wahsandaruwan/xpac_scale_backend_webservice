@@ -14,10 +14,10 @@ const getCounts = async (req, res) => {
     return res.status(200).json({
       status: true,
       data: {
-        customerCount: customerCount < 10 ? 0 + customerCount : customerCount,
-        adminCount: adminCount < 10 ? 0 + adminCount : adminCount,
-        deviceCount: deviceCount < 10 ? 0 + deviceCount : deviceCount,
-        itemCount: deviceCount < 10 ? 0 + itemCount : itemCount,
+        customerCount: customerCount < 10 ? "0" + customerCount : customerCount,
+        adminCount: adminCount < 10 ? "0" + adminCount : adminCount,
+        deviceCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
+        itemCount: deviceCount < 10 ? "0" + itemCount : itemCount,
       },
       success: {
         message: "Successfully fetched the items!",
