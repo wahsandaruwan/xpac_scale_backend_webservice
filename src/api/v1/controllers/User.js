@@ -123,6 +123,7 @@ const LoginUser = async (req, res) => {
 
 // ----------Conroller function to get all user ----------
 const getAllCustomers = async (req, res) => {
+  console.log("Hello");
   try {
     const customers = await UserModel.aggregate([
       {
