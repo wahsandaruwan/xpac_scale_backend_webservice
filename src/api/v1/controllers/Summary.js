@@ -4,13 +4,16 @@ const { itemModel, UserModel, WeighingDeviceModel } = require("../models");
 // ----------Conroller function to get summary----------
 const getCounts = async (req, res) => {
   try {
-    const userCount = await UserModel.countDocuments({ userType: "customer" });
+    const customerCount = await UserModel.countDocuments({
+      userType: "customer",
+    });
+    const adminCount = await UserModel.countDocuments({ userType: "admin" });
     const deviceCount = await WeighingDeviceModel.countDocuments();
     const itemCount = await itemModel.countDocuments();
 
     return res.status(200).json({
       status: true,
-      data: { userCount, deviceCount, itemCount },
+      data: { customerCount, adminCount, deviceCount, itemCount },
       success: {
         message: "Successfully fetched the items!",
       },
