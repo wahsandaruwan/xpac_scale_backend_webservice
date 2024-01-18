@@ -123,9 +123,6 @@ const GetAllDeviceDetails = async (req, res) => {
           "deviceData.createdAt": -1, // Sort by createdAt in descending order
         },
       },
-      {
-        $limit: 1, // Limit to the most recent document
-      },
     ]);
 
     return res.status(200).json({
