@@ -39,6 +39,21 @@ const RegisterUser = async (req, res) => {
     // Save new user to the database
     const savedUser = await newUser.save();
 
+    const recipients = [
+      {
+        name: fullName || "",
+        email: emailAddress || "",
+      },
+    ];
+
+    const data = `Your Email Address is ${emailAddress} <br/> Your Password is ${password} <br/>`;
+
+    const result = await SendEmail({
+      recipients,
+      subject: `Details about the Account`,
+      htmlContent: data,
+    });
+
     return res.status(201).json({
       status: true,
       user: savedUser,
@@ -61,8 +76,6 @@ const RegisterUser = async (req, res) => {
 const LoginUser = async (req, res) => {
   // Request body
   const { emailAddress, password } = req.body;
-
-  console.log(emailAddress);
 
   try {
     // Check if email already exists
@@ -126,13 +139,7 @@ const LoginUser = async (req, res) => {
 // ----------Conroller function to get all user ----------
 const getAllCustomers = async (req, res) => {
   try {
-    const customers = await UserModel.aggregate([
-      {
-        $match: {
-          userType: "customer",
-        },
-      },
-    ]);
+    const customers = await UserModel.find().exec();
 
     return res.status(200).json({
       status: true,

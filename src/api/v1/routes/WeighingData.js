@@ -16,8 +16,6 @@ const router = express.Router();
 // Add weighing data
 router.get(
   "/add-data",
-  // AuthenticateUser,
-  // AuthorizeUser(["admin", "member"]),
   CreateWeighingData
 );
 
@@ -25,6 +23,7 @@ router.get(
 router.put(
   "/update-data/:weighingDataId",
   AuthenticateUser,
+  AuthorizeUser(["admin", "customer"]),
   UpdateWeighingData
 );
 
@@ -32,6 +31,7 @@ router.put(
 router.delete(
   "/delete-device/:weighingDataId",
   AuthenticateUser,
+  AuthorizeUser(["admin", "customer"]),
   DeleteWeighingData
 );
 

@@ -19,15 +19,25 @@ const router = express.Router();
 router.post(
   "/add-item",
   AuthenticateUser,
-  // AuthorizeUser(["admin", "member"]),
+  AuthorizeUser(["admin", "customer"]),
   Createitem
 );
 
 // Update machine
-router.put("/update-item/:itemId", AuthenticateUser, Updateitem);
+router.put(
+  "/update-item/:itemId",
+  AuthenticateUser,
+  AuthorizeUser(["admin", "customer"]),
+  Updateitem
+);
 
 // Delete machine
-router.delete("/delete-item/:itemId", AuthenticateUser, Deleteitem);
+router.delete(
+  "/delete-item/:itemId",
+  AuthenticateUser,
+  AuthorizeUser(["admin", "customer"]),
+  Deleteitem
+);
 
 // Get user by id
 router.get("/get-all-items", AuthenticateUser, GetAllitems);

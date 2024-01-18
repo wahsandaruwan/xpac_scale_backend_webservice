@@ -14,7 +14,12 @@ const { AuthenticateUser, AuthorizeUser } = require("../middlewares");
 const router = express.Router();
 
 // Register user
-router.post("/register", RegisterUser);
+router.post(
+  "/register",
+  AuthenticateUser,
+  AuthorizeUser(["admin"]),
+  RegisterUser
+);
 
 // Login user
 router.post("/login", LoginUser);

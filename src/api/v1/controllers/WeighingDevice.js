@@ -106,7 +106,27 @@ const GetAllWeighingDevicesDetails = async (req, res) => {
 const GetAllDeviceDetails = async (req, res) => {
   try {
     // Fetch all devices from the WeighingDevices model
-    const devices = await WeighingDeviceModel.find();
+    const devices = await WeighingDeviceModel.aggregate([
+      {
+        $lookup: {
+          from: "weighingdatas", // The name of the collection (Assuming it's named 'weighingdata')
+          localField: "_id",
+          foreignField: "weighingDeviceId",
+          as: "deviceData",
+        },
+      },
+      {
+        $unwind: "$deviceData", // Unwind to separate documents for each entry in deviceData array
+      },
+      {
+        $sort: {
+          "deviceData.createdAt": -1, // Sort by createdAt in descending order
+        },
+      },
+      {
+        $limit: 1, // Limit to the most recent document
+      },
+    ]);
 
     return res.status(200).json({
       status: true,

@@ -21,18 +21,24 @@ const router = express.Router();
 // Add machine
 router.post(
   "/add-device",
-  // AuthenticateUser,
-  // AuthorizeUser(["admin", "member"]),
+  AuthenticateUser,
+  AuthorizeUser(["admin"]),
   CreateWeighingDevice
 );
 
 // Update machine
-router.put("/update-device/:deviceId", AuthenticateUser, UpdateWeighingDevice);
+router.put(
+  "/update-device/:deviceId",
+  AuthenticateUser,
+  AuthorizeUser(["admin", "customer"]),
+  UpdateWeighingDevice
+);
 
 // Delete machine
 router.delete(
   "/delete-device/:deviceId",
   AuthenticateUser,
+  AuthorizeUser(["admin"]),
   DeleteWeighingDevice
 );
 
