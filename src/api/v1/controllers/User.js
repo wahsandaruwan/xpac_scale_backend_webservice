@@ -62,6 +62,8 @@ const LoginUser = async (req, res) => {
   // Request body
   const { emailAddress, password } = req.body;
 
+  console.log(emailAddress);
+
   try {
     // Check if email already exists
     const user = await UserModel.findOne({ emailAddress }).exec();
