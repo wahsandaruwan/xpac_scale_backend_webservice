@@ -31,6 +31,11 @@ router.get(
   AuthorizeUser(["admin"]),
   GetUserById
 );
-router.get("/all", AuthenticateUser, AuthorizeUser(["admin"]), getAllCustomers);
+router.get(
+  "/all",
+  AuthenticateUser,
+  AuthorizeUser(["admin", "moderator"]),
+  getAllCustomers
+);
 
 module.exports = router;
