@@ -103,10 +103,78 @@ const GetAllWeighingDevicesDetails = async (req, res) => {
   }
 };
 
+// const GetAllDeviceDetails = async (req, res) => {
+//   try {
+//     // Fetch all devices from the WeighingDevices model
+//     const devices = await WeighingDeviceModel.find();
+
+//     return res.status(200).json({
+//       status: true,
+//       devices,
+//       success: {
+//         message: "Successfully fetched all device details!",
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     return res.status(500).json({
+//       status: false,
+//       error: {
+//         message: "Failed to fetch device details!",
+//       },
+//     });
+//   }
+// };
 const GetAllDeviceDetails = async (req, res) => {
   try {
     // Fetch all devices from the WeighingDevices model
-    const devices = await WeighingDeviceModel.find();
+    const devices = await WeighingDeviceModel.aggregate([
+      {
+        $lookup: {
+          from: "weighingdatas", // The name of the collection (Assuming it's named 'weighingdata')
+          localField: "_id",
+          foreignField: "weighingDeviceId",
+          as: "deviceData",
+        },
+      },
+      {
+        $unwind: {
+          path: "$deviceData",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $sort: {
+          "deviceData.createdAt": -1, // Sort by createdAt in descending order
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          deviceDetails: { $first: "$$ROOT" },
+          latestData: { $first: "$deviceData" },
+        },
+      },
+      {
+        $replaceRoot: { newRoot: "$deviceDetails" },
+      },
+      {
+        $project: {
+          _id: 1, // Exclude the default _id field
+          title: 1, // Include the title field from WeighingDevice
+          imageUrl: 1, // Include the imageUrl field from WeighingDevice
+          userId: 1, // Include the userId field from WeighingDevice
+          assignedItem: 1, // Include the assignedItem field from WeighingDevice
+          dateCreated: 1, // Include the dateCreated field from WeighingDevice
+          timeCreated: 1, // Include the timeCreated field from WeighingDevice
+          dateUpdated: 1, // Include the dateUpdated field from WeighingDevice
+          timeUpdated: 1, // Include the timeUpdated field from WeighingDevice
+          createdAt: 1,
+          updatedAt: 1,
+          deviceData: 1, // Exclude the 'deviceData' array from the final result
+        },
+      },
+    ]);
 
     return res.status(200).json({
       status: true,
