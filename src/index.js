@@ -104,7 +104,7 @@ app.post("/api/excel/:type", async (req, res) => {
   });
 });
 
-app.get((req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "static/index.html"));
 });
 
