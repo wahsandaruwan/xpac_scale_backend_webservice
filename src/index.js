@@ -70,7 +70,8 @@ app.use("/api/summary", SummaryRoutes);
 app.use("/api/notification", NotificationRoutes);
 
 //Excel route
-app.post("/api/excel", async (req, res) => {
+app.post("/api/excel/:type", async (req, res) => {
+  const { type } = req.params;
   console.log(req.body);
   // Columns for excel
   const columns = [
@@ -82,8 +83,16 @@ app.post("/api/excel", async (req, res) => {
     { header: "Battery Voltage (V)", key: "batteryVoltage", width: 30 },
   ];
 
+  let fileName = "";
+
+  if (type == "device") {
+    fileName = "device_data.xlsx";
+  } else if (type == "devices") {
+    fileName = "all_devices_data.xlsx";
+  }
+
   // Generate excel file
-  await GenerateExcelFile(columns, req.body, "device_data.xlsx", "device");
+  await GenerateExcelFile(columns, req.body, fileName, type);
 
   return res.status(200).json({
     status: true,
