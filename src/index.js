@@ -1,4 +1,5 @@
 // ----------Third-party libraries and modules----------
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 require("dotenv/config");
@@ -31,6 +32,7 @@ const corsOptions = {
 app.use(cors());
 // Accept json
 app.use(express.json());
+app.use(express.static("static"));
 
 // Allow access uploads folder
 app.use("/uploads", express.static("./uploads/"));
@@ -100,6 +102,10 @@ app.post("/api/excel/:type", async (req, res) => {
       message: "Successfully fetched all data and created a excel file!",
     },
   });
+});
+
+app.get((req, res) => {
+  res.sendFile(path.join(__dirname, "static/index.html"));
 });
 
 // Error route
