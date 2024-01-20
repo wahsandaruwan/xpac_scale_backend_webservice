@@ -71,6 +71,7 @@ app.use("/api/notification", NotificationRoutes);
 
 //Excel route
 app.post("/api/excel", async (req, res) => {
+  console.log(req.body);
   // Columns for excel
   const columns = [
     { header: "Id", key: "id", width: 50 },
