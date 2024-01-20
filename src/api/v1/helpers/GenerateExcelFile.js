@@ -11,16 +11,14 @@ const GenerateExcelFile = async (columns, data, fileName, type) => {
 
   // Add data to the excel sheel
   if (type == "device") {
-    data.forEach((item, index) => {
-      // Create a new row for each data item
-      worksheet.addRow({
-        id: item.id,
-        title: item.title,
-        itemCount: item.itemCount,
-        totalWeight: item.totalWeight,
-        batteryPercentage: item.batteryPercentage,
-        batteryVoltage: item.batteryVoltage,
-      });
+    // Create a new row for each data item
+    worksheet.addRow({
+      id: data.id,
+      title: data.title,
+      itemCount: data.itemCount,
+      totalWeight: data.totalWeight,
+      batteryPercentage: data.batteryPercentage,
+      batteryVoltage: data.batteryVoltage,
     });
   }
 
