@@ -89,7 +89,6 @@ app.post("/api/excel", async (req, res) => {
     success: {
       message: "Successfully fetched all data and created a excel file!",
     },
-    players,
   });
 });
 
