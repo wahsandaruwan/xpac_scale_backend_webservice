@@ -24,7 +24,7 @@ const GenerateExcelFile = async (columns, data, fileName, type) => {
     data.forEach((item, index) => {
       // Create a new row for each data item
       worksheet.addRow({
-        id: item.id,
+        id: item._id,
         title: item.title,
         itemCount: item.deviceData.itemCount,
         totalWeight: item.deviceData.totalWeight,
