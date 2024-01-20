@@ -16,6 +16,7 @@ const {
   SummaryRoutes,
   NotificationRoutes,
 } = require("./api/v1/routes");
+const { GenerateExcelFile } = require("./api/v1/helpers");
 
 // ----------Global instances----------
 const app = express();
@@ -33,6 +34,9 @@ app.use(express.json());
 
 // Allow access uploads folder
 app.use("/uploads", express.static("./uploads/"));
+
+// Allow access downloads folder
+app.use("/downloads", express.static("./downloads/"));
 
 // Base route
 app.get("/", (req, res) => {
@@ -64,6 +68,30 @@ app.use("/api/summary", SummaryRoutes);
 
 //Notification route
 app.use("/api/notification", NotificationRoutes);
+
+//Excel route
+app.post("/api/excel", async (req, res) => {
+  // Columns for excel
+  const columns = [
+    { header: "Id", key: "id", width: 50 },
+    { header: "Title", key: "title", width: 30 },
+    { header: "Item Count", key: "itemCount", width: 30 },
+    { header: "Total Weight (g)", key: "totalWeight", width: 30 },
+    { header: "Battery Percentage (%)", key: "batteryPercentage", width: 30 },
+    { header: "Battery Voltage (V)", key: "batteryVoltage", width: 30 },
+  ];
+
+  // Generate excel file
+  await GenerateExcelFile(columns, req.body, "device_data.xlsx", "device");
+
+  return res.status(200).json({
+    status: true,
+    success: {
+      message: "Successfully fetched all data and created a excel file!",
+    },
+    players,
+  });
+});
 
 // Error route
 app.use((req, res) => {

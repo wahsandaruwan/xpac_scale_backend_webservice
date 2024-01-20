@@ -4,6 +4,7 @@ const { GenerateTokens, VerifyTokens } = require("./ManageTokens");
 const { FileUpload } = require("./DefineFileStorage");
 const { getDateTime } = require("./GetDateTime");
 const { SendEmail } = require("./SendEmail");
+const { GenerateExcelFile } = require("./GenerateExcelFile");
 
 // ----------Exports----------
 module.exports = {
@@ -13,4 +14,5 @@ module.exports = {
   FileUpload,
   getDateTime,
   SendEmail,
+  GenerateExcelFile,
 };
