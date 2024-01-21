@@ -46,7 +46,7 @@ const RegisterUser = async (req, res) => {
       },
     ];
 
-    const data = `Your Email Address is ${emailAddress} <br/> Your Password is ${password} <br/>`;
+    const data = `Your Email Address is ${userType} </br> Your Email Address is ${emailAddress} <br/> Your Password is ${password} <br/>`;
 
     const result = await SendEmail({
       recipients,
