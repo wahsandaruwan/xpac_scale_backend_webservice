@@ -54,6 +54,8 @@ const RegisterUser = async (req, res) => {
       htmlContent: data,
     });
 
+    console.log(result);
+
     return res.status(201).json({
       status: true,
       user: savedUser,
