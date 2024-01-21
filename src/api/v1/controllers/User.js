@@ -3,14 +3,12 @@ const bcrypt = require("bcrypt");
 
 // ----------Custom libraries and modules----------
 const { UserModel, UserTokenModel } = require("../models");
-const { GenerateTokens } = require("../helpers");
+const { GenerateTokens, SendEmail } = require("../helpers");
 
 // ----------Conroller function to register new user----------
 const RegisterUser = async (req, res) => {
   // Request body
   const { fullName, emailAddress, password, phoneNumber, userType } = req.body;
-
-  console.log(req.body);
 
   try {
     // Check if email or phone number already exist
@@ -26,8 +24,6 @@ const RegisterUser = async (req, res) => {
       });
     }
 
-    console.log("Part 1");
-
     // Password hashing
     const hashedPassword = await bcrypt.hash(password, 8);
 
@@ -40,12 +36,8 @@ const RegisterUser = async (req, res) => {
       userType,
     });
 
-    console.log("Part 2");
-
     // Save new user to the database
     const savedUser = await newUser.save();
-
-    console.log("Part 3");
 
     const recipients = [
       {
@@ -61,8 +53,6 @@ const RegisterUser = async (req, res) => {
       subject: `Details about the Account`,
       htmlContent: data,
     });
-
-    console.log("Part 4");
 
     return res.status(201).json({
       status: true,
