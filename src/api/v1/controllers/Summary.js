@@ -7,7 +7,9 @@ const getCounts = async (req, res) => {
     const customerCount = await UserModel.countDocuments({
       userType: "customer",
     });
-    const adminCount = await UserModel.countDocuments({ userType: "admin" });
+    const modCount = await UserModel.countDocuments({
+      userType: "moderator",
+    });
     const deviceCount = await WeighingDeviceModel.countDocuments();
     const itemCount = await itemModel.countDocuments();
 
@@ -15,7 +17,7 @@ const getCounts = async (req, res) => {
       status: true,
       data: {
         customerCount: customerCount < 10 ? "0" + customerCount : customerCount,
-        adminCount: adminCount < 10 ? "0" + adminCount : adminCount,
+        modCount: modCount < 10 ? "0" + modCount : modCount,
         deviceCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
         itemCount: deviceCount < 10 ? "0" + itemCount : itemCount,
       },
