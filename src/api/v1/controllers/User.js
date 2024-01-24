@@ -276,7 +276,7 @@ const DeleteUserById = async (req, res) => {
     await UserModel.findOneAndRemove({ _id: userId });
 
     // Delete rules
-    await RuleModel.deleteMany({ deviceId: deviceId });
+    await RuleModel.deleteMany({ userId: userId });
 
     return res.status(200).json({
       status: true,
