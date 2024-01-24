@@ -1,6 +1,6 @@
 // ----------Custom libraries and modules----------
 const mongoose = require("mongoose");
-const { WeighingDeviceModel } = require("../models");
+const { WeighingDeviceModel, RuleModel } = require("../models");
 
 // ----------Conroller function to added new WeighingDevice----------
 const CreateWeighingDevice = async (req, res) => {
@@ -9,7 +9,6 @@ const CreateWeighingDevice = async (req, res) => {
     title,
     imageUrl,
     assignedItem,
-    userId,
     dateCreated,
     timeCreated,
     dateUpdated,
@@ -26,7 +25,6 @@ const CreateWeighingDevice = async (req, res) => {
       timeCreated,
       dateUpdated,
       timeUpdated,
-      userId,
     });
 
     // Save new WeighingDevice to the database
@@ -1221,6 +1219,10 @@ const DeleteWeighingDevice = async (req, res) => {
     const deleteWeighingDevice = await WeighingDeviceModel.findOneAndDelete({
       _id: deviceId,
     }).exec();
+
+    // Delete rules
+    await RuleModel.deleteMany({ deviceId: deviceId });
+
     return res.status(200).json({
       status: true,
       success: {

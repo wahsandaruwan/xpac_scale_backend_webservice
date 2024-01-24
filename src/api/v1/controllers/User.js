@@ -2,7 +2,7 @@
 const bcrypt = require("bcrypt");
 
 // ----------Custom libraries and modules----------
-const { UserModel, UserTokenModel } = require("../models");
+const { UserModel, UserTokenModel, RuleModel } = require("../models");
 const { GenerateTokens, SendEmail } = require("../helpers");
 
 // ----------Conroller function to register new user----------
@@ -245,8 +245,11 @@ const DeleteUserById = async (req, res) => {
       });
     }
 
-    // Remove the user (this will trigger the pre-remove hook to delete associated devices and weighing data)
+    // Remove the user
     await UserModel.findOneAndRemove({ _id: userId });
+
+    // Delete rules
+    await RuleModel.deleteMany({ deviceId: deviceId });
 
     return res.status(200).json({
       status: true,

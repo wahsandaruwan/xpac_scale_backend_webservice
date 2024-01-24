@@ -41,6 +41,14 @@ const {
   getCountByDate,
 } = require("./Summary");
 const { SendNotification } = require("./Notification");
+const {
+  CreateRule,
+  GetAllRules,
+  GetAllRulesById,
+  GetRuleById,
+  UpdateRule,
+  DeleteRuleById,
+} = require("./Rule");
 
 // ----------Exports----------
 module.exports = {
@@ -74,4 +82,10 @@ module.exports = {
   getCustomerDeviceCount,
   getCountByDate,
   SendNotification,
+  CreateRule,
+  GetAllRules,
+  GetAllRulesById,
+  GetRuleById,
+  UpdateRule,
+  DeleteRuleById,
 };

@@ -16,6 +16,7 @@ const {
   FileRoutes,
   SummaryRoutes,
   NotificationRoutes,
+  RuleRoutes,
 } = require("./api/v1/routes");
 const { GenerateExcelFile } = require("./api/v1/helpers");
 
@@ -70,6 +71,9 @@ app.use("/api/summary", SummaryRoutes);
 
 //Notification route
 app.use("/api/notification", NotificationRoutes);
+
+//Notification route
+app.use("/api/rules", RuleRoutes);
 
 //Excel route
 app.post("/api/excel/:type", async (req, res) => {

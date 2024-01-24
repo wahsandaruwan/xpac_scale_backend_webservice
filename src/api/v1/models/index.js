@@ -4,6 +4,7 @@ const WeighingDeviceModel = require("./WeighingDevice");
 const WeighingDataModel = require("./WeighingData");
 const itemModel = require("./Item");
 const UserTokenModel = require("./UserToken");
+const RuleModel = require("./Rule");
 
 // ----------Exports----------
 module.exports = {
@@ -12,4 +13,5 @@ module.exports = {
   WeighingDataModel,
   itemModel,
   UserTokenModel,
+  RuleModel,
 };

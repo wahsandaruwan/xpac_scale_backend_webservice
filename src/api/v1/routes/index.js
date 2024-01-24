@@ -7,6 +7,7 @@ const UserTokenRoutes = require("./UserToken");
 const FileRoutes = require("./File");
 const SummaryRoutes = require("./Summary");
 const NotificationRoutes = require("./Notification");
+const RuleRoutes = require("./Rule");
 
 // ----------Exports----------
 module.exports = {
@@ -18,4 +19,5 @@ module.exports = {
   FileRoutes,
   SummaryRoutes,
   NotificationRoutes,
+  RuleRoutes,
 };
