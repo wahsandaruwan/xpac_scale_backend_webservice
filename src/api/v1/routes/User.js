@@ -5,7 +5,8 @@ const express = require("express");
 const {
   RegisterUser,
   LoginUser,
-  getAllCustomers,
+  GetAllUsers,
+  GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
   DeleteUserById,
@@ -37,7 +38,14 @@ router.get(
   "/all",
   AuthenticateUser,
   AuthorizeUser(["admin", "moderator"]),
-  getAllCustomers
+  GetAllUsers
+);
+
+router.get(
+  "/all/nonadmin",
+  AuthenticateUser,
+  AuthorizeUser(["admin"]),
+  GetAllNonAdminUsers
 );
 
 router.put(

@@ -139,15 +139,15 @@ const LoginUser = async (req, res) => {
 };
 
 // ----------Conroller function to get all user ----------
-const getAllCustomers = async (req, res) => {
+const GetAllUsers = async (req, res) => {
   try {
-    const customers = await UserModel.find().exec();
+    const users = await UserModel.find().exec();
 
     return res.status(200).json({
       status: true,
-      customers,
+      users,
       success: {
-        message: "Successfully fetched the customers!",
+        message: "Successfully fetched all users!",
       },
     });
   } catch (err) {
@@ -155,7 +155,34 @@ const getAllCustomers = async (req, res) => {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to fetch the user!",
+        message: "Failed to fetch all users!",
+      },
+    });
+  }
+};
+
+// ----------Conroller function to get all non-admin user ----------
+const GetAllNonAdminUsers = async (req, res) => {
+  const userTypesToRetrieve = ["customer", "moderator"];
+
+  try {
+    const nonAdminUsers = await UserModel.find({
+      userType: { $in: userTypesToRetrieve },
+    }).exec();
+
+    return res.status(200).json({
+      status: true,
+      nonAdminUsers,
+      success: {
+        message: "Successfully fetched all non-admin users!",
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      status: false,
+      error: {
+        message: "Failed to fetch all non-admin users!",
       },
     });
   }
@@ -271,7 +298,8 @@ const DeleteUserById = async (req, res) => {
 module.exports = {
   RegisterUser,
   LoginUser,
-  getAllCustomers,
+  GetAllUsers,
+  GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
   DeleteUserById,

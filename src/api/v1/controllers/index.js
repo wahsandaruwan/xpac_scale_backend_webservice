@@ -2,7 +2,8 @@
 const {
   RegisterUser,
   LoginUser,
-  getAllCustomers,
+  GetAllUsers,
+  GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
   DeleteUserById,
@@ -54,7 +55,8 @@ const {
 module.exports = {
   RegisterUser,
   LoginUser,
-  getAllCustomers,
+  GetAllUsers,
+  GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
   DeleteUserById,
