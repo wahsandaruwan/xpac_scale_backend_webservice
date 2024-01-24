@@ -186,4 +186,90 @@ const GetUserById = async (req, res) => {
   }
 };
 
-module.exports = { RegisterUser, LoginUser, getAllCustomers, GetUserById };
+// ----------Conroller function to update user by id----------
+const UpdateUser = async (req, res) => {
+  // Request parameters
+  const { userId } = req.params;
+  try {
+    const user = await UserModel.findOne({
+      _id: userId,
+    }).exec();
+    if (!user) {
+      return res.status(404).json({
+        status: true,
+        error: { message: "User not found!" },
+      });
+    }
+    const updateuser = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: req.body,
+      },
+      {
+        new: false,
+      }
+    );
+    return res.status(200).json({
+      status: true,
+      updateuser,
+      success: {
+        message: "Successfully updated the user!",
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      error: {
+        message: "Failed to update the user!",
+      },
+    });
+  }
+};
+
+// Controller function to delete user by id
+const DeleteUserById = async (req, res) => {
+  // Request parameters
+  const { userId } = req.params;
+
+  try {
+    // Find the user by id
+    const user = await UserModel.findOne({ _id: userId }).exec();
+
+    // If the user does not exist, return a 404 response
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        error: {
+          message: "User not found!",
+        },
+      });
+    }
+
+    // Remove the user (this will trigger the pre-remove hook to delete associated devices and weighing data)
+    await UserModel.findOneAndRemove({ _id: userId });
+
+    return res.status(200).json({
+      status: true,
+      success: {
+        message: "Successfully deleted the user!",
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      status: false,
+      error: {
+        message: "Failed to delete the user!",
+      },
+    });
+  }
+};
+
+module.exports = {
+  RegisterUser,
+  LoginUser,
+  getAllCustomers,
+  GetUserById,
+  UpdateUser,
+  DeleteUserById,
+};

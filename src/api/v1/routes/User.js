@@ -7,6 +7,8 @@ const {
   LoginUser,
   getAllCustomers,
   GetUserById,
+  UpdateUser,
+  DeleteUserById,
 } = require("../controllers");
 const { AuthenticateUser, AuthorizeUser } = require("../middlewares");
 
@@ -28,7 +30,7 @@ router.post("/login", LoginUser);
 router.get(
   "/one/:userId",
   AuthenticateUser,
-  AuthorizeUser(["admin"]),
+  AuthorizeUser(["admin", "moderator"]),
   GetUserById
 );
 router.get(
@@ -36,6 +38,20 @@ router.get(
   AuthenticateUser,
   AuthorizeUser(["admin", "moderator"]),
   getAllCustomers
+);
+
+router.put(
+  "/update/:userId",
+  AuthenticateUser,
+  AuthorizeUser(["admin"]),
+  UpdateUser
+);
+
+router.delete(
+  "/delete/:userId",
+  AuthenticateUser,
+  AuthorizeUser(["admin"]),
+  DeleteUserById
 );
 
 module.exports = router;

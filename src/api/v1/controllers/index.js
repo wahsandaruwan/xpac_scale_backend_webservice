@@ -4,6 +4,8 @@ const {
   LoginUser,
   getAllCustomers,
   GetUserById,
+  UpdateUser,
+  DeleteUserById,
 } = require("./User");
 const {
   CreateWeighingDevice,
@@ -46,6 +48,8 @@ module.exports = {
   LoginUser,
   getAllCustomers,
   GetUserById,
+  UpdateUser,
+  DeleteUserById,
   GenerateAccessToken,
   DeleteRefreshToken,
   GetUserInfoByToken,
