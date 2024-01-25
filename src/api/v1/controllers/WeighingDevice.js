@@ -15,6 +15,8 @@ const CreateWeighingDevice = async (req, res) => {
     timeUpdated,
   } = req.body;
 
+  console.log(req.body);
+
   try {
     // New WeighingDevice
     const newWeighingDevice = new WeighingDeviceModel({
