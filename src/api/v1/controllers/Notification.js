@@ -1,14 +1,14 @@
 // ----------Custom libraries and modules----------
 const mongoose = require("mongoose");
 
-const { WeighingDeviceModel, UserModel } = require("../models");
+const { WeighingDeviceModel, UserModel, RuleModel } = require("../models");
 const { SendEmail } = require("../helpers");
 
 // ----------Conroller function to added new weighing data----------
 const SendNotification = async (req, res) => {
   // Request body
   const { battery_percentage, battery_voltage, total_weight, item_count, id } =
-    req.query;
+    req.body;
 
   // Ensure values are not less than 0
   const sanitizedBatteryPercentage = Math.max(
@@ -34,18 +34,26 @@ const SendNotification = async (req, res) => {
       });
     }
 
-    const userData = await WeighingDeviceModel.aggregate([
+    const userData = await RuleModel.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(id),
+          deviceId: new mongoose.Types.ObjectId(id),
         },
       },
       {
         $lookup: {
-          from: "users",
+          from: "users", // Assuming the collection name is 'users'
           localField: "userId",
           foreignField: "_id",
           as: "userDetails",
+        },
+      },
+      {
+        $unwind: "$userDetails", // Unwind the userIds array
+      },
+      {
+        $match: {
+          "userDetails.emailStatus": "yes", // Filter by user status
         },
       },
       {

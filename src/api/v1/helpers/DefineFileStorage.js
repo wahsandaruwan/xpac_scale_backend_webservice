@@ -1,4 +1,5 @@
 // ----------Third-party libraries and modules----------
+const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
 
@@ -31,4 +32,26 @@ const FileUpload = (field) => {
   };
 };
 
-module.exports = { FileUpload };
+const DeleteFileData = async () => {
+  try {
+    // Drop all collections in the database
+    await mongoose.connection.db.dropDatabase();
+
+    return {
+      status: true,
+      success: {
+        message: "Config database successfully.",
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      status: false,
+      error: {
+        message: "Failed to config the database.",
+      },
+    };
+  }
+};
+
+module.exports = { FileUpload, DeleteFileData };

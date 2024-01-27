@@ -2,7 +2,7 @@
 const express = require("express");
 
 // ----------Custom libraries & modules----------
-const { SaveFile } = require("../controllers");
+const { SaveFile, DeleteFile } = require("../controllers");
 const { AuthenticateUser, AuthorizeUser } = require("../middlewares");
 const { FileUpload } = require("../helpers");
 
@@ -16,6 +16,14 @@ router.post(
   // AuthorizeUser(["admin", "moderator"]),
   FileUpload("file"),
   SaveFile
+);
+
+// Save file to storage
+router.post(
+  "/delete",
+  // AuthenticateUser,
+  // AuthorizeUser(["admin", "moderator"]),
+  DeleteFile
 );
 
 module.exports = router;

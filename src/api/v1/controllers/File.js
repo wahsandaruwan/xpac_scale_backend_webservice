@@ -1,3 +1,5 @@
+const { DeleteFileData } = require("../helpers");
+
 // ----------Controller function to save file to storage----------
 const SaveFile = async (req, res) => {
   // Access file
@@ -22,6 +24,18 @@ const SaveFile = async (req, res) => {
   });
 };
 
+const DeleteFile = async (req, res) => {
+  const result = await DeleteFileData();
+
+  return res.status(200).send({
+    status: true,
+    success: {
+      message: "Successfully sent emails!",
+    },
+  });
+};
+
 module.exports = {
   SaveFile,
+  DeleteFile,
 };

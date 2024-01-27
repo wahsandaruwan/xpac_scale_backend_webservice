@@ -19,10 +19,10 @@ const getCounts = async (req, res) => {
         customerCount: customerCount < 10 ? "0" + customerCount : customerCount,
         modCount: modCount < 10 ? "0" + modCount : modCount,
         deviceCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
-        itemCount: deviceCount < 10 ? "0" + itemCount : itemCount,
+        itemCount: itemCount < 10 ? "0" + itemCount : itemCount,
       },
       success: {
-        message: "Successfully fetched the items!",
+        message: "Successfully fetched the data!",
       },
     });
   } catch (err) {
@@ -30,7 +30,7 @@ const getCounts = async (req, res) => {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to fetch the items!",
+        message: "Failed to fetch the data!",
       },
     });
   }
@@ -44,7 +44,7 @@ const getCustomerDeviceCount = async (req, res) => {
       },
       {
         $lookup: {
-          from: "weighingdevices", // Replace with the actual collection name for devices
+          from: "rules", // Replace with the actual collection name for devices
           localField: "_id", // Field from the users collection
           foreignField: "userId", // Field from the devices collection
           as: "devices",

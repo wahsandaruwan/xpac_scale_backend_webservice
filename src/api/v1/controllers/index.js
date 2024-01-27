@@ -35,7 +35,7 @@ const {
   DeleteRefreshToken,
   GetUserInfoByToken,
 } = require("./UserToken");
-const { SaveFile } = require("./File");
+const { SaveFile, DeleteFile } = require("./File");
 const {
   getCounts,
   getCustomerDeviceCount,
@@ -80,6 +80,7 @@ module.exports = {
   Updateitem,
   Deleteitem,
   SaveFile,
+  DeleteFile,
   getCounts,
   getCustomerDeviceCount,
   getCountByDate,

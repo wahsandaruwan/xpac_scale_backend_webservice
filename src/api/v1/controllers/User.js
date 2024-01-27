@@ -85,7 +85,7 @@ const LoginUser = async (req, res) => {
     if (!user) {
       return res.json({
         status: false,
-        error: { message: "Wrong email address!" },
+        error: { message: "User not found for the giving credentials!" },
       });
     }
 
@@ -94,7 +94,7 @@ const LoginUser = async (req, res) => {
     if (!passMatch) {
       return res.json({
         status: false,
-        error: { message: "Wrong password!" },
+        error: { message: "Invalid credentials!" },
       });
     }
 

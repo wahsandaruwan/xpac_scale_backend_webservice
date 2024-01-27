@@ -15,8 +15,6 @@ const CreateWeighingDevice = async (req, res) => {
     timeUpdated,
   } = req.body;
 
-  console.log(req.body);
-
   try {
     // New WeighingDevice
     const newWeighingDevice = new WeighingDeviceModel({
@@ -51,45 +49,106 @@ const CreateWeighingDevice = async (req, res) => {
 };
 
 // ----------Conroller function to get all WeighingDevices----------
+// const GetAllWeighingDevicesDetails = async (req, res) => {
+//   const { userId } = req.user;
+
+//   try {
+//     // const WeighingDevice = await WeighingDeviceModel.find().exec();
+
+//     const WeighingDevice = await WeighingDeviceModel.aggregate([
+//       {
+//         $match: {
+//           userId: mongoose.Types.ObjectId(userId),
+//         },
+//       },
+//       {
+//         $lookup: {
+//           from: "items", // The name of the collection (Assuming it's named 'items')
+//           localField: "assignedItem",
+//           foreignField: "_id", // Assuming 'assignedItem' is the ID referencing an item
+//           as: "itemDetails",
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 1, // Exclude the default _id field
+//           title: 1, // Include the title field from WeighingDevice
+//           imageUrl: 1, // Include the imageUrl field from WeighingDevice
+//           userId: 1, // Include the userId field from WeighingDevice
+//           "itemDetails.title": 1, // Include the title field from Item
+//           "itemDetails.imageUrl": 1, // Include the imageUrl field from Item
+//           "itemDetails.weight": 1, // Include the weight field from Item
+//           // Add or remove fields as needed
+//         },
+//       },
+//     ]).exec();
+
+//     return res.status(200).json({
+//       status: true,
+//       WeighingDevice,
+//       success: {
+//         message: "Successfully fetched the weighing devices!",
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({
+//       status: false,
+//       error: {
+//         message: "Failed to fetch the weighing devices!",
+//       },
+//     });
+//   }
+// };
+
 const GetAllWeighingDevicesDetails = async (req, res) => {
   const { userId } = req.user;
 
   try {
-    // const WeighingDevice = await WeighingDeviceModel.find().exec();
-
-    const WeighingDevice = await WeighingDeviceModel.aggregate([
+    const ruleDevices = await RuleModel.aggregate([
       {
         $match: {
-          userId: mongoose.Types.ObjectId(userId),
+          userId: new mongoose.Types.ObjectId(userId),
         },
       },
       {
         $lookup: {
-          from: "items", // The name of the collection (Assuming it's named 'items')
-          localField: "assignedItem",
-          foreignField: "_id", // Assuming 'assignedItem' is the ID referencing an item
+          from: "devices", // Assuming the collection name is 'devices'
+          localField: "deviceId",
+          foreignField: "_id",
+          as: "deviceDetails",
+        },
+      },
+      {
+        $unwind: "$deviceDetails",
+      },
+      {
+        $lookup: {
+          from: "items", // Assuming the collection name is 'items'
+          localField: "deviceDetails.assignedItem",
+          foreignField: "_id",
           as: "itemDetails",
         },
       },
       {
         $project: {
-          _id: 1, // Exclude the default _id field
-          title: 1, // Include the title field from WeighingDevice
-          imageUrl: 1, // Include the imageUrl field from WeighingDevice
-          userId: 1, // Include the userId field from WeighingDevice
-          "itemDetails.title": 1, // Include the title field from Item
-          "itemDetails.imageUrl": 1, // Include the imageUrl field from Item
-          "itemDetails.weight": 1, // Include the weight field from Item
-          // Add or remove fields as needed
+          _id: 1,
+          "deviceDetails._id": 1,
+          "deviceDetails.title": 1,
+          "deviceDetails.imageUrl": 1,
+          "deviceDetails.userId": 1,
+          "itemDetails.title": 1,
+          "itemDetails.imageUrl": 1,
+          "itemDetails.weight": 1,
         },
       },
     ]).exec();
 
     return res.status(200).json({
       status: true,
-      WeighingDevice,
+      ruleDevices,
       success: {
-        message: "Successfully fetched the weighing devices!",
+        message: "Successfully fetched the rule devices!",
       },
     });
   } catch (err) {
@@ -97,34 +156,12 @@ const GetAllWeighingDevicesDetails = async (req, res) => {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to fetch the weighing devices!",
+        message: "Failed to fetch the rule devices!",
       },
     });
   }
 };
 
-// const GetAllDeviceDetails = async (req, res) => {
-//   try {
-//     // Fetch all devices from the WeighingDevices model
-//     const devices = await WeighingDeviceModel.find();
-
-//     return res.status(200).json({
-//       status: true,
-//       devices,
-//       success: {
-//         message: "Successfully fetched all device details!",
-//       },
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({
-//       status: false,
-//       error: {
-//         message: "Failed to fetch device details!",
-//       },
-//     });
-//   }
-// };
 const GetAllDeviceDetails = async (req, res) => {
   try {
     // Fetch all devices from the WeighingDevices model
@@ -261,575 +298,6 @@ const GetWeighingDeviceDetailsById = async (req, res) => {
   }
 };
 
-// ----------Conroller function to get weighing device by id----------
-// const GetWeighingDevicesDataById = async (req, res) => {
-//   // Request parameters
-//   const { deviceId } = req.params;
-//   // console.log(mongoose.mongo.BSONPure.ObjectID.fromHexString(deviceId));
-
-//   try {
-//     // Check if the WeighingDevice with the specified ID exists
-//     const weighingDeviceExists = await WeighingDeviceModel.exists({
-//       _id: deviceId,
-//     });
-
-//     if (!weighingDeviceExists) {
-//       return res.status(404).json({
-//         status: false,
-//         error: {
-//           message: "WeighingDevice not found with the specified ID.",
-//         },
-//       });
-//     }
-
-//     const weighingDeviceData = await WeighingDeviceModel.aggregate([
-//       {
-//         $match: {
-//           _id: new mongoose.Types.ObjectId(deviceId),
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "weighingdatas", // The name of the collection (Assuming it's named 'weighingdata')
-//           localField: "_id",
-//           foreignField: "weighingDeviceId",
-//           as: "deviceData",
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           deviceData: { $reverseArray: "$deviceData" },
-//           // Add other fields if needed
-//         },
-//       },
-//     ]);
-//     return res.status(200).json({
-//       status: true,
-//       weighingDeviceData,
-//       success: {
-//         message: "Successfully fetched the weighing devices!",
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({
-//       status: false,
-//       error: {
-//         message: "Failed to fetch the weighing devices!",
-//       },
-//     });
-//   }
-// };
-
-// work for the daily datas
-// const GetWeighingDevicesDataById = async (req, res) => {
-//   // Request parameters
-//   const { deviceId } = req.params;
-//   const { period } = req.query;
-
-//   try {
-//     // Check if the WeighingDevice with the specified ID exists
-//     const weighingDeviceExists = await WeighingDeviceModel.exists({
-//       _id: deviceId,
-//     });
-
-//     if (!weighingDeviceExists) {
-//       return res.status(404).json({
-//         status: false,
-//         error: {
-//           message: "WeighingDevice not found with the specified ID.",
-//         },
-//       });
-//     }
-
-//     let aggregationPipeline = [
-//       {
-//         $match: {
-//           _id: new mongoose.Types.ObjectId(deviceId),
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "weighingdatas",
-//           localField: "_id",
-//           foreignField: "weighingDeviceId",
-//           as: "deviceData",
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           title: 1, // Include the title field from WeighingDevice
-//           imageUrl: 1, // Include the imageUrl field from WeighingDevice
-//           userId: 1, // Include the userId field from WeighingDevice
-//           deviceData: 1,
-//           // Add other fields if needed
-//         },
-//       },
-//     ];
-
-//     if (period === "daily") {
-//       const today = new Date();
-//       today.setHours(0, 0, 0, 0);
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: today,
-//               $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
-//             },
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id",
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $push: "$deviceData" },
-//             // Add other fields if needed
-//           },
-//         }
-//       );
-//     }
-
-//     const weighingDeviceData = await WeighingDeviceModel.aggregate(
-//       aggregationPipeline
-//     );
-
-//     return res.status(200).json({
-//       status: true,
-//       weighingDeviceData,
-//       success: {
-//         message: "Successfully fetched the weighing devices!",
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({
-//       status: false,
-//       error: {
-//         message: "Failed to fetch the weighing devices!",
-//       },
-//     });
-//   }
-// };
-
-//give the this week all data
-// const GetWeighingDevicesDataById = async (req, res) => {
-//   // Request parameters
-//   const { deviceId } = req.params;
-//   const { period } = req.query;
-
-//   try {
-//     // Check if the WeighingDevice with the specified ID exists
-//     const weighingDeviceExists = await WeighingDeviceModel.exists({
-//       _id: deviceId,
-//     });
-
-//     if (!weighingDeviceExists) {
-//       return res.status(404).json({
-//         status: false,
-//         error: {
-//           message: "WeighingDevice not found with the specified ID.",
-//         },
-//       });
-//     }
-
-//     let aggregationPipeline = [
-//       {
-//         $match: {
-//           _id: new mongoose.Types.ObjectId(deviceId),
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "weighingdatas",
-//           localField: "_id",
-//           foreignField: "weighingDeviceId",
-//           as: "deviceData",
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           title: 1,
-//           imageUrl: 1,
-//           userId: 1,
-//           deviceData: 1,
-//           // Add other fields if needed
-//         },
-//       },
-//     ];
-
-//     if (period === "daily") {
-//       const today = new Date();
-//       today.setHours(0, 0, 0, 0);
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: today,
-//               $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
-//             },
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id",
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $push: "$deviceData" },
-//             // Add other fields if needed
-//           },
-//         }
-//       );
-//     } else if (period === "weekly") {
-//       const startOfWeek = new Date();
-//       startOfWeek.setHours(0, 0, 0, 0);
-//       startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Start of the current week
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: startOfWeek,
-//               $lt: new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000), // End of the current week
-//             },
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id",
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $push: "$deviceData" },
-//             // Add other fields if needed
-//           },
-//         }
-//       );
-//     }
-
-//     const weighingDeviceData = await WeighingDeviceModel.aggregate(
-//       aggregationPipeline
-//     );
-
-//     return res.status(200).json({
-//       status: true,
-//       weighingDeviceData,
-//       success: {
-//         message: "Successfully fetched the weighing devices!",
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({
-//       status: false,
-//       error: {
-//         message: "Failed to fetch the weighing devices!",
-//       },
-//     });
-//   }
-// };
-
-// const GetWeighingDevicesDataById = async (req, res) => {
-//   // Request parameters
-//   const { deviceId } = req.params;
-//   const { period } = req.query;
-
-//   try {
-//     // Check if the WeighingDevice with the specified ID exists
-//     const weighingDeviceExists = await WeighingDeviceModel.exists({
-//       _id: deviceId,
-//     });
-
-//     if (!weighingDeviceExists) {
-//       return res.status(404).json({
-//         status: false,
-//         error: {
-//           message: "WeighingDevice not found with the specified ID.",
-//         },
-//       });
-//     }
-
-//     let aggregationPipeline = [
-//       {
-//         $match: {
-//           _id: new mongoose.Types.ObjectId(deviceId),
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "weighingdatas",
-//           localField: "_id",
-//           foreignField: "weighingDeviceId",
-//           as: "deviceData",
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           title: 1,
-//           imageUrl: 1,
-//           userId: 1,
-//           deviceData: 1,
-//           // Add other fields if needed
-//         },
-//       },
-//     ];
-
-//     if (period === "daily") {
-//       const today = new Date();
-//       today.setHours(0, 0, 0, 0);
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: today,
-//               $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
-//             },
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id",
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $push: "$deviceData" },
-//             // Add other fields if needed
-//           },
-//         }
-//       );
-//     } else if (period === "weekly") {
-//       const startOfWeek = new Date();
-//       startOfWeek.setHours(0, 0, 0, 0);
-//       startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Start of the current week
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: startOfWeek,
-//               $lt: new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000), // End of the current week
-//             },
-//           },
-//         },
-//         {
-//           $sort: {
-//             "deviceData.createdAt": -1,
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: {
-//               _id: "$_id",
-//               date: {
-//                 $dateToString: {
-//                   format: "%Y-%m-%d",
-//                   date: "$deviceData.createdAt",
-//                 },
-//               },
-//             },
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $first: "$deviceData" },
-//             // Add other fields if needed
-//           },
-//         }
-//       );
-//     }
-
-//     const weighingDeviceData = await WeighingDeviceModel.aggregate(
-//       aggregationPipeline
-//     );
-
-//     return res.status(200).json({
-//       status: true,
-//       weighingDeviceData,
-//       success: {
-//         message: "Successfully fetched the weighing devices!",
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({
-//       status: false,
-//       error: {
-//         message: "Failed to fetch the weighing devices!",
-//       },
-//     });
-//   }
-// };
-
-// work for the week
-// const GetWeighingDevicesDataById = async (req, res) => {
-//   // Request parameters
-//   const { deviceId } = req.params;
-//   const { period } = req.query;
-
-//   try {
-//     // Check if the WeighingDevice with the specified ID exists
-//     const weighingDeviceExists = await WeighingDeviceModel.exists({
-//       _id: deviceId,
-//     });
-
-//     if (!weighingDeviceExists) {
-//       return res.status(404).json({
-//         status: false,
-//         error: {
-//           message: "WeighingDevice not found with the specified ID.",
-//         },
-//       });
-//     }
-
-//     let aggregationPipeline = [
-//       {
-//         $match: {
-//           _id: new mongoose.Types.ObjectId(deviceId),
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "weighingdatas",
-//           localField: "_id",
-//           foreignField: "weighingDeviceId",
-//           as: "deviceData",
-//         },
-//       },
-//       {
-//         $project: {
-//           _id: 1,
-//           title: 1,
-//           imageUrl: 1,
-//           userId: 1,
-//           deviceData: 1,
-//         },
-//       },
-//     ];
-
-//     if (period === "daily") {
-//       const today = new Date();
-//       today.setHours(0, 0, 0, 0);
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: today,
-//               $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
-//             },
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id",
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $push: "$deviceData" },
-//             // Add other fields if needed
-//           },
-//         }
-//       );
-//     } else if (period === "weekly") {
-//       const startOfWeek = new Date();
-//       startOfWeek.setHours(0, 0, 0, 0);
-//       startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Start of the current week
-
-//       aggregationPipeline.push(
-//         {
-//           $unwind: "$deviceData",
-//         },
-//         {
-//           $match: {
-//             "deviceData.createdAt": {
-//               $gte: startOfWeek,
-//               $lt: new Date(startOfWeek.getTime() + 7 * 24 * 60 * 60 * 1000), // End of the current week
-//             },
-//           },
-//         },
-//         {
-//           $sort: {
-//             "deviceData.createdAt": 1,
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: {
-//               _id: "$_id",
-//               date: {
-//                 $dateToString: {
-//                   format: "%Y-%m-%d",
-//                   date: "$deviceData.createdAt",
-//                 },
-//               },
-//             },
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $last: "$deviceData" },
-//           },
-//         },
-//         {
-//           $group: {
-//             _id: "$_id._id",
-//             title: { $first: "$title" },
-//             imageUrl: { $first: "$imageUrl" },
-//             userId: { $first: "$userId" },
-//             deviceData: { $push: "$deviceData" },
-//           },
-//         }
-//       );
-//     }
-
-//     const weighingDeviceData = await WeighingDeviceModel.aggregate(
-//       aggregationPipeline
-//     );
-
-//     return res.status(200).json({
-//       status: true,
-//       weighingDeviceData,
-//       success: {
-//         message: "Successfully fetched the weighing devices!",
-//       },
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).json({
-//       status: false,
-//       error: {
-//         message: "Failed to fetch the weighing devices!",
-//       },
-//     });
-//   }
-// };
-
 const GetWeighingDevicesDataById = async (req, res) => {
   // Request parameters
   const { deviceId } = req.params;
@@ -876,32 +344,6 @@ const GetWeighingDevicesDataById = async (req, res) => {
     ];
 
     if (period === "daily") {
-      // const today = new Date();
-      // today.setHours(0, 0, 0, 0);
-
-      // aggregationPipeline.push(
-      //   {
-      //     $unwind: "$deviceData",
-      //   },
-      //   {
-      //     $match: {
-      //       "deviceData.createdAt": {
-      //         $gte: today,
-      //         $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000),
-      //       },
-      //     },
-      //   },
-      //   {
-      //     $group: {
-      //       _id: "$_id",
-      //       title: { $first: "$title" },
-      //       imageUrl: { $first: "$imageUrl" },
-      //       userId: { $first: "$userId" },
-      //       deviceData: { $push: "$deviceData" },
-      //     },
-      //   }
-      // );
-
       const today = new Date();
       today.setHours(0, 0, 0, 0);
 
