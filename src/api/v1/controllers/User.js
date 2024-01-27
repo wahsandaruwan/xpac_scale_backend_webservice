@@ -272,17 +272,8 @@ const UpdateUserSecure = async (req, res) => {
       });
     }
 
-    // Check if password matches
-    const passMatch = await bcrypt.compare(password, user.password);
-    if (!passMatch) {
-      return res.json({
-        status: false,
-        error: { message: "Wrong old password!" },
-      });
-    }
-
     // Password hashing
-    const hashedPassword = await bcrypt.hash(newPassword, 8);
+    const hashedPassword = await bcrypt.hash(password, 8);
 
     const updateuser = await UserModel.findOneAndUpdate(
       { _id: userId },
