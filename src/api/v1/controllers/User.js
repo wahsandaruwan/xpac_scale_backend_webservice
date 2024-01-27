@@ -46,7 +46,7 @@ const RegisterUser = async (req, res) => {
       },
     ];
 
-    const data = `User Account Type : ${userType} </br> Email Address : ${emailAddress} <br/> Password : ${password} <br/>`;
+    const data = `Full Name : ${fullName} </br> User Account Type : ${userType} </br> Email Address : ${emailAddress} <br/> Password : ${password} <br/> Phone Number : ${phoneNumber} <br/>`;
 
     const result = await SendEmail({
       recipients,
@@ -308,7 +308,7 @@ const UpdateUserSecure = async (req, res) => {
         },
       ];
 
-      const data = `User Account Type : ${userType} </br> Email Address : ${emailAddress} <br/> Password : ${password} <br/>`;
+      const data = `Full Name : ${fullName} </br> User Account Type : ${userType} </br> Email Address : ${emailAddress} <br/> Password : ${password} <br/> Phone Number : ${phoneNumber} <br/>`;
 
       const result = await SendEmail({
         recipients,
