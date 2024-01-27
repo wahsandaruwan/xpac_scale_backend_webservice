@@ -50,7 +50,7 @@ const RegisterUser = async (req, res) => {
 
     const result = await SendEmail({
       recipients,
-      subject: `Details about the Account`,
+      subject: `New Account Details`,
       htmlContent: data,
     });
 
@@ -193,8 +193,6 @@ const GetUserById = async (req, res) => {
   // Request parameters
   const { userId } = req.params;
 
-  console.log(userId);
-
   try {
     const user = await UserModel.findOne({ _id: userId }).exec();
     return res.status(200).json({
@@ -262,7 +260,14 @@ const UpdateUserSecure = async (req, res) => {
   const { userId } = req.params;
 
   // Request body
-  const { fullName, emailAddress, password, phoneNumber, userType } = req.body;
+  const {
+    fullName,
+    emailAddress,
+    password,
+    phoneNumber,
+    userType,
+    adminChange,
+  } = req.body;
 
   try {
     const user = await UserModel.findOne({
@@ -293,6 +298,27 @@ const UpdateUserSecure = async (req, res) => {
         new: false,
       }
     );
+
+    // Send email
+    if (adminChange) {
+      const recipients = [
+        {
+          name: fullName || "",
+          email: emailAddress || "",
+        },
+      ];
+
+      const data = `User Account Type : ${userType} </br> Email Address : ${emailAddress} <br/> Password : ${password} <br/>`;
+
+      const result = await SendEmail({
+        recipients,
+        subject: `New Account Details`,
+        htmlContent: data,
+      });
+
+      console.log(result);
+    }
+
     return res.status(200).json({
       status: true,
       updateuser,
