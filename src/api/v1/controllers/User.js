@@ -193,6 +193,8 @@ const GetUserById = async (req, res) => {
   // Request parameters
   const { userId } = req.params;
 
+  console.log(userId);
+
   try {
     const user = await UserModel.findOne({ _id: userId }).exec();
     return res.status(200).json({
