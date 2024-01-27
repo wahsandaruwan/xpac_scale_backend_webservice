@@ -261,6 +261,8 @@ const UpdateUserSecure = async (req, res) => {
   // Request body
   const { fullName, emailAddress, password, phoneNumber, userType } = req.body;
 
+  console.log(req.body);
+
   try {
     const user = await UserModel.findOne({
       _id: userId,
