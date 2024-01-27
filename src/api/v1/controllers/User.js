@@ -312,7 +312,7 @@ const UpdateUserSecure = async (req, res) => {
 
       const result = await SendEmail({
         recipients,
-        subject: `New Account Details`,
+        subject: `Updated Account Details`,
         htmlContent: data,
       });
 
