@@ -259,7 +259,7 @@ const UpdateUserSecure = async (req, res) => {
   const { userId } = req.params;
 
   // Request body
-  const { emailAddress, password, newPassword } = req.body;
+  const { fullName, emailAddress, password, phoneNumber, userType } = req.body;
 
   try {
     const user = await UserModel.findOne({
@@ -287,7 +287,13 @@ const UpdateUserSecure = async (req, res) => {
     const updateuser = await UserModel.findOneAndUpdate(
       { _id: userId },
       {
-        $set: { emailAddress: emailAddress, password: hashedPassword },
+        $set: {
+          fullName: fullName,
+          emailAddress: emailAddress,
+          password: hashedPassword,
+          phoneNumber: phoneNumber,
+          userType: userType,
+        },
       },
       {
         new: false,
@@ -297,14 +303,14 @@ const UpdateUserSecure = async (req, res) => {
       status: true,
       updateuser,
       success: {
-        message: "Successfully updated the secure user information!",
+        message: "Successfully updated the user information!",
       },
     });
   } catch (error) {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to update the secure user information!",
+        message: "Failed to update the user information!",
       },
     });
   }
