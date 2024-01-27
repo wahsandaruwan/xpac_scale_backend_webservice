@@ -16,10 +16,6 @@ const WeighingDeviceSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-    },
     dateCreated: {
       type: String,
       required: true,
