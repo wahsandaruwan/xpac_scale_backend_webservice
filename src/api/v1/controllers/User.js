@@ -240,14 +240,71 @@ const UpdateUser = async (req, res) => {
       status: true,
       updateuser,
       success: {
-        message: "Successfully updated the user!",
+        message: "Successfully updated the basic user information!",
       },
     });
   } catch (error) {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to update the user!",
+        message: "Failed to update the basic user information!",
+      },
+    });
+  }
+};
+
+// ----------Conroller function to update user secure information by id----------
+const UpdateUserSecure = async (req, res) => {
+  // Request parameters
+  const { userId } = req.params;
+
+  // Request body
+  const { emailAddress, password, newPassword } = req.body;
+
+  try {
+    const user = await UserModel.findOne({
+      _id: userId,
+    }).exec();
+    if (!user) {
+      return res.status(404).json({
+        status: true,
+        error: { message: "User not found!" },
+      });
+    }
+
+    // Check if password matches
+    const passMatch = await bcrypt.compare(password, user.password);
+    if (!passMatch) {
+      return res.json({
+        status: false,
+        error: { message: "Wrong old password!" },
+      });
+    }
+
+    // Password hashing
+    const hashedPassword = await bcrypt.hash(newPassword, 8);
+
+    const updateuser = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $set: { emailAddress: emailAddress, password: hashedPassword },
+      },
+      {
+        new: false,
+      }
+    );
+    return res.status(200).json({
+      status: true,
+      updateuser,
+      success: {
+        message: "Successfully updated the secure user information!",
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      error: {
+        message: "Failed to update the secure user information!",
       },
     });
   }
@@ -302,5 +359,6 @@ module.exports = {
   GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
+  UpdateUserSecure,
   DeleteUserById,
 };

@@ -31,7 +31,7 @@ router.post("/login", LoginUser);
 router.get(
   "/one/:userId",
   AuthenticateUser,
-  AuthorizeUser(["admin", "moderator"]),
+  AuthorizeUser(["admin", "moderator", "customer"]),
   GetUserById
 );
 router.get(
@@ -51,7 +51,14 @@ router.get(
 router.put(
   "/update/:userId",
   AuthenticateUser,
-  AuthorizeUser(["admin"]),
+  AuthorizeUser(["admin", "moderator", "customer"]),
+  UpdateUser
+);
+
+router.put(
+  "/update/secure/:userId",
+  AuthenticateUser,
+  AuthorizeUser(["admin", "moderator", "customer"]),
   UpdateUser
 );
 

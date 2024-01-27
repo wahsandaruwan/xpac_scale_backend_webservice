@@ -6,6 +6,7 @@ const {
   GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
+  UpdateUserSecure,
   DeleteUserById,
 } = require("./User");
 const {
@@ -59,6 +60,7 @@ module.exports = {
   GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
+  UpdateUserSecure,
   DeleteUserById,
   GenerateAccessToken,
   DeleteRefreshToken,
