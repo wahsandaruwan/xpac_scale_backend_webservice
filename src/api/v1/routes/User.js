@@ -9,6 +9,7 @@ const {
   GetAllNonAdminUsers,
   GetUserById,
   UpdateUser,
+  UpdateUserSecure,
   DeleteUserById,
 } = require("../controllers");
 const { AuthenticateUser, AuthorizeUser } = require("../middlewares");
@@ -59,7 +60,7 @@ router.put(
   "/update/secure/:userId",
   AuthenticateUser,
   AuthorizeUser(["admin", "moderator", "customer"]),
-  UpdateUser
+  UpdateUserSecure
 );
 
 router.delete(

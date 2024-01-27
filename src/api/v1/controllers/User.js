@@ -219,7 +219,7 @@ const GetUserById = async (req, res) => {
 const UpdateUser = async (req, res) => {
   // Request parameters
   const { userId } = req.params;
-  console.log(req.body);
+
   try {
     const user = await UserModel.findOne({
       _id: userId,
@@ -263,8 +263,6 @@ const UpdateUserSecure = async (req, res) => {
 
   // Request body
   const { fullName, emailAddress, password, phoneNumber, userType } = req.body;
-
-  console.log(req.body);
 
   try {
     const user = await UserModel.findOne({
