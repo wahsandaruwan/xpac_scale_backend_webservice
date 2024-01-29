@@ -19,7 +19,7 @@ const getCounts = async (req, res) => {
         customerCount: customerCount < 10 ? "0" + customerCount : customerCount,
         modCount: modCount < 10 ? "0" + modCount : modCount,
         deviceCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
-        itemCount: itemCount < 10 ? "0" + itemCount : itemCount,
+        itemCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
       },
       success: {
         message: "Successfully fetched the data!",
