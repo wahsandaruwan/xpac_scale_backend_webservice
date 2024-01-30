@@ -8,7 +8,7 @@ const { SendEmail } = require("../helpers");
 const SendNotification = async (req, res) => {
   // Request body
   const { battery_percentage, battery_voltage, total_weight, item_count, id } =
-    req.body;
+    req.query;
 
   // Ensure values are not less than 0
   const sanitizedBatteryPercentage = Math.max(
@@ -23,7 +23,7 @@ const SendNotification = async (req, res) => {
     // Check if the WeighingDevice with the specified ID exists
     const weighingDeviceExists = await WeighingDeviceModel.exists({
       _id: id,
-    });
+    }).exec();
 
     if (!weighingDeviceExists) {
       return res.status(404).json({
