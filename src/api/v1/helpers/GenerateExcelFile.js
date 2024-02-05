@@ -27,16 +27,12 @@ const GenerateExcelFile = async (columns, data, fileName, type) => {
       worksheet.addRow({
         id: item._id,
         title: item.title,
-        itemCount: item.deviceData.itemCount ? item.deviceData.itemCount : 0,
-        totalWeight: item.deviceData.totalWeight
-          ? item.deviceData.totalWeight
-          : 0,
-        batteryPercentage: item.deviceData.batteryPercentage
+        itemCount: item.deviceData ? item.deviceData.itemCount : 0,
+        totalWeight: item.deviceData ? item.deviceData.totalWeight : 0,
+        batteryPercentage: item.deviceData
           ? item.deviceData.batteryPercentage
           : 0,
-        batteryVoltage: item.deviceData.batteryVoltage
-          ? item.deviceData.batteryVoltage
-          : 0,
+        batteryVoltage: item.deviceData ? item.deviceData.batteryVoltage : 0,
       });
     });
   }
