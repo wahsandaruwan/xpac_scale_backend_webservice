@@ -78,7 +78,7 @@ app.use("/api/rules", RuleRoutes);
 //Excel route
 app.post("/api/excel/:type", async (req, res) => {
   const { type } = req.params;
-  console.log(req.body);
+  // console.log(req.body);
   // Columns for excel
   const columns = [
     { header: "Id", key: "id", width: 50 },

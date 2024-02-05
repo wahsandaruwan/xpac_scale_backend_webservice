@@ -21,6 +21,7 @@ const GenerateExcelFile = async (columns, data, fileName, type) => {
       batteryVoltage: data.batteryVoltage,
     });
   } else if (type == "devices") {
+    console.log(data);
     data.forEach((item, index) => {
       // Create a new row for each data item
       worksheet.addRow({
