@@ -2,15 +2,14 @@
 const express = require("express");
 
 // ----------Custom libraries & modules----------
-const { SendNotification } = require("../controllers");
+const { SendNotification, SendMessage } = require("../controllers");
 
 // Initialize the router
 const router = express.Router();
 
-// Add weighing data
-router.get(
-  "/send-notification",
-  SendNotification
-);
+// Send notification
+router.get("/send-notification", SendNotification);
+
+router.get("/send-message", SendMessage);
 
 module.exports = router;

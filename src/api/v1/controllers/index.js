@@ -42,7 +42,7 @@ const {
   getCustomerDeviceCount,
   getCountByDate,
 } = require("./Summary");
-const { SendNotification } = require("./Notification");
+const { SendNotification, SendMessage } = require("./Notification");
 const {
   CreateRule,
   GetAllRules,
@@ -87,6 +87,7 @@ module.exports = {
   getCustomerDeviceCount,
   getCountByDate,
   SendNotification,
+  SendMessage,
   CreateRule,
   GetAllRules,
   GetAllRulesById,

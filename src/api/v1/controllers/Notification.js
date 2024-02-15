@@ -116,6 +116,109 @@ const SendNotification = async (req, res) => {
   }
 };
 
+// ----------Conroller function to added new weighing data----------
+const SendMessage = async (req, res) => {
+  // Request body
+  const { id } = req.query;
+
+  try {
+    // Check if the WeighingDevice with the specified ID exists
+    const weighingDeviceExists = await WeighingDeviceModel.exists({
+      _id: id,
+    }).exec();
+
+    if (!weighingDeviceExists) {
+      return res.status(404).json({
+        status: false,
+        error: {
+          message: "WeighingDevice not found with the specified ID.",
+        },
+      });
+    }
+
+    const userData = await RuleModel.aggregate([
+      {
+        $match: {
+          deviceId: new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: "users", // Assuming the collection name is 'users'
+          localField: "userId",
+          foreignField: "_id",
+          as: "userDetails",
+        },
+      },
+      {
+        $unwind: "$userDetails", // Unwind the userIds array
+      },
+      {
+        $match: {
+          "userDetails.emailStatus": "yes", // Filter by user status
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          "userDetails.fullName": 1,
+          "userDetails.emailAddress": 1,
+          "userDetails.phoneNumber": 1,
+        },
+      },
+    ]);
+
+    const adminUsers = await UserModel.find({ userType: "admin" });
+
+    const recipients = [
+      ...userData.map((item) => {
+        const userDetails = item.userDetails[0];
+        return {
+          name: userDetails.fullName || "",
+          email: userDetails.emailAddress || "",
+        };
+      }),
+      ...adminUsers.map((adminUser) => ({
+        name: adminUser.fullName || "",
+        email: adminUser.emailAddress || "",
+      })),
+    ];
+
+    const data = `We are refilling items to the device "${weighingDeviceExists.tile}" with the ID : ${id}.`;
+
+    const result = await SendEmail({
+      recipients,
+      subject: `Refilling Items`,
+      htmlContent: data,
+    });
+
+    if (result.status != "success") {
+      return res.status(500).json({
+        status: false,
+        error: {
+          message: "Internal Server Error. Please try again later",
+        },
+      });
+    }
+    return res.status(200).send({
+      status: true,
+      success: {
+        message: "Successfully sent emails!",
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      status: false,
+      error: {
+        message: "Failed to add a new weighing data!",
+      },
+    });
+  }
+};
+
 module.exports = {
   SendNotification,
+  SendMessage,
 };
