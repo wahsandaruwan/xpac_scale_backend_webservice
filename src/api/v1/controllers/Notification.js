@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { WeighingDeviceModel, UserModel, RuleModel } = require("../models");
 const { SendEmail } = require("../helpers");
 
-// ----------Conroller function to added new weighing data----------
+// ----------Conroller function to send notification for benchmark count----------
 const SendNotification = async (req, res) => {
   // Request body
   const { battery_percentage, battery_voltage, total_weight, item_count, id } =
@@ -110,13 +110,13 @@ const SendNotification = async (req, res) => {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to add a new weighing data!",
+        message: "Failed to send emails!",
       },
     });
   }
 };
 
-// ----------Conroller function to added new weighing data----------
+// ----------Conroller function to send email messages for refilling----------
 const SendMessage = async (req, res) => {
   // Request body
   const { id } = req.query;
@@ -212,7 +212,7 @@ const SendMessage = async (req, res) => {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to add a new weighing data!",
+        message: "Failed to send emails!",
       },
     });
   }
