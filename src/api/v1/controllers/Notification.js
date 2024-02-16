@@ -123,11 +123,11 @@ const SendMessage = async (req, res) => {
 
   try {
     // Check if the WeighingDevice with the specified ID exists
-    const weighingDeviceExists = await WeighingDeviceModel.exists({
+    const weghingDevice = await WeighingDeviceModel.findOne({
       _id: id,
     }).exec();
 
-    if (!weighingDeviceExists) {
+    if (!weghingDevice) {
       return res.status(404).json({
         status: false,
         error: {
@@ -185,7 +185,7 @@ const SendMessage = async (req, res) => {
       })),
     ];
 
-    const data = `We are refilling items to the device "${weighingDeviceExists.tile}" with the ID : ${id}.`;
+    const data = `We are refilling items to the device "${weghingDevice.title}" with the ID : ${id}.`;
 
     const result = await SendEmail({
       recipients,
