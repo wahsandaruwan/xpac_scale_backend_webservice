@@ -7,6 +7,9 @@ const getCounts = async (req, res) => {
     const customerCount = await UserModel.countDocuments({
       userType: "customer",
     });
+    const adminCount = await UserModel.countDocuments({
+      userType: "admin",
+    });
     const modCount = await UserModel.countDocuments({
       userType: "moderator",
     });
@@ -19,7 +22,7 @@ const getCounts = async (req, res) => {
         customerCount: customerCount < 10 ? "0" + customerCount : customerCount,
         modCount: modCount < 10 ? "0" + modCount : modCount,
         deviceCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
-        itemCount: deviceCount < 10 ? "0" + deviceCount : deviceCount,
+        adminCount: adminCount < 10 ? "0" + adminCount : adminCount,
       },
       success: {
         message: "Successfully fetched the data!",
