@@ -244,6 +244,8 @@ const GetAllDeviceDetails = async (req, res) => {
       },
     ]);
 
+    console.log(devices);
+
     return res.status(200).json({
       status: true,
       devices,
