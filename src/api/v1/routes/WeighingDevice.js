@@ -43,11 +43,7 @@ router.delete(
 );
 
 // Get user by id
-router.get(
-  "/item_details/all/:userId",
-  AuthenticateUser,
-  GetAllWeighingDevicesDetails
-);
+router.get("/item_details/all", AuthenticateUser, GetAllWeighingDevicesDetails);
 router.get("/item_details/one/:deviceId", GetWeighingDeviceDetailsById);
 router.get("/all/", AuthenticateUser, GetAllDeviceDetails);
 router.get("/all/:deviceId", GetWeighingDevicesDataById);
