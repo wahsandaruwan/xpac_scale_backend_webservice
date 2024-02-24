@@ -12,7 +12,7 @@ const {
 const {
   CreateWeighingDevice,
   GetAllDeviceDetails,
-  GetAllWeighingDevicesDetails,
+  GetAllDeviceDetailsbyUserId,
   GetWeighingDevicesDataById,
   UpdateWeighingDevice,
   DeleteWeighingDevice,
@@ -67,7 +67,7 @@ module.exports = {
   GetUserInfoByToken,
   CreateWeighingDevice,
   GetAllDeviceDetails,
-  GetAllWeighingDevicesDetails,
+  GetAllDeviceDetailsbyUserId,
   GetWeighingDevicesDataById,
   GetWeighingDeviceDetailsById,
   GetWeighingDevicesRecentDataById,

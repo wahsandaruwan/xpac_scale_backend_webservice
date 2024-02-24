@@ -105,11 +105,11 @@ const CreateWeighingDevice = async (req, res) => {
 //   }
 // };
 
-const GetAllWeighingDevicesDetails = async (req, res) => {
+const GetAllDeviceDetailsbyUserId = async (req, res) => {
   const { userId } = req.user;
 
   try {
-    const ruleDevices = await RuleModel.aggregate([
+    const devices = await RuleModel.aggregate([
       {
         $match: {
           userId: new mongoose.Types.ObjectId(userId),
@@ -117,42 +117,67 @@ const GetAllWeighingDevicesDetails = async (req, res) => {
       },
       {
         $lookup: {
-          from: "devices", // Assuming the collection name is 'devices'
+          from: "weighingdevices",
           localField: "deviceId",
           foreignField: "_id",
           as: "deviceDetails",
         },
       },
       {
-        $unwind: "$deviceDetails",
+        $unwind: {
+          path: "$deviceDetails",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $lookup: {
-          from: "items", // Assuming the collection name is 'items'
-          localField: "deviceDetails.assignedItem",
-          foreignField: "_id",
-          as: "itemDetails",
+          from: "weighingdatas",
+          let: { deviceId: "$deviceId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$weighingDeviceId", "$$deviceId"] },
+              },
+            },
+            {
+              $sort: { createdAt: -1 },
+            },
+            {
+              $limit: 1,
+            },
+          ],
+          as: "deviceData",
+        },
+      },
+      {
+        $unwind: {
+          path: "$deviceData",
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
         $project: {
-          _id: 1,
-          "deviceDetails._id": 1,
-          "deviceDetails.title": 1,
-          "deviceDetails.imageUrl": 1,
-          "deviceDetails.userId": 1,
-          "itemDetails.title": 1,
-          "itemDetails.imageUrl": 1,
-          "itemDetails.weight": 1,
+          _id: "$deviceDetails._id", // Exclude the default _id field
+          title: "$deviceDetails.title", // Include the title field from WeighingDevice
+          imageUrl: "$deviceDetails.imageUrl", // Include the imageUrl field from WeighingDevice
+          userId: "$deviceDetails.userId", // Include the userId field from WeighingDevice
+          assignedItem: "$deviceDetails.assignedItem", // Include the assignedItem field from WeighingDevice
+          dateCreated: "$deviceDetails.dateCreated", // Include the dateCreated field from WeighingDevice
+          timeCreated: "$deviceDetails.timeCreated", // Include the timeCreated field from WeighingDevice
+          dateUpdated: "$deviceDetails.dateUpdated", // Include the dateUpdated field from WeighingDevice
+          timeUpdated: "$deviceDetails.timeUpdated", // Include the timeUpdated field from WeighingDevice
+          createdAt: "$deviceDetails.createdAt",
+          updatedAt: "$deviceDetails.updatedAt",
+          deviceData: 1, // Exclude the 'deviceData' array from the final result
         },
       },
     ]).exec();
 
     return res.status(200).json({
       status: true,
-      ruleDevices,
+      devices,
       success: {
-        message: "Successfully fetched the rule devices!",
+        message: "Successfully fetched all device details!",
       },
     });
   } catch (err) {
@@ -160,7 +185,7 @@ const GetAllWeighingDevicesDetails = async (req, res) => {
     return res.status(500).json({
       status: false,
       error: {
-        message: "Failed to fetch the rule devices!",
+        message: "Failed to fetch the devices details!",
       },
     });
   }
@@ -694,7 +719,7 @@ const DeleteWeighingDevice = async (req, res) => {
 module.exports = {
   CreateWeighingDevice,
   GetAllDeviceDetails,
-  GetAllWeighingDevicesDetails,
+  GetAllDeviceDetailsbyUserId,
   GetWeighingDevicesDataById,
   UpdateWeighingDevice,
   DeleteWeighingDevice,

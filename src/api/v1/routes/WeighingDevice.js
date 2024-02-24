@@ -4,7 +4,7 @@ const express = require("express");
 // ----------Custom libraries & modules----------
 const {
   CreateWeighingDevice,
-  GetAllWeighingDevicesDetails,
+  GetAllDeviceDetailsbyUserId,
   GetWeighingDevicesDataById,
   GetWeighingDeviceDetailsById,
   GetWeighingDevicesRecentDataById,
@@ -43,7 +43,7 @@ router.delete(
 );
 
 // Get user by id
-router.get("/item_details/all", AuthenticateUser, GetAllWeighingDevicesDetails);
+router.get("/user/all", AuthenticateUser, GetAllDeviceDetailsbyUserId);
 router.get("/item_details/one/:deviceId", GetWeighingDeviceDetailsById);
 router.get("/all/", AuthenticateUser, GetAllDeviceDetails);
 router.get("/all/:deviceId", GetWeighingDevicesDataById);
