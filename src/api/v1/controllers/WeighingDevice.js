@@ -106,7 +106,7 @@ const CreateWeighingDevice = async (req, res) => {
 // };
 
 const GetAllWeighingDevicesDetails = async (req, res) => {
-  const { userId } = req.params;
+  const { userId } = req.user;
 
   try {
     const ruleDevices = await RuleModel.aggregate([
