@@ -175,8 +175,6 @@ const GetAllDeviceDetailsbyUserId = async (req, res) => {
       },
     ]).exec();
 
-    console.log(devices);
-
     return res.status(200).json({
       status: true,
       devices,
