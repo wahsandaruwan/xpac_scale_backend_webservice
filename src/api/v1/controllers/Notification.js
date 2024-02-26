@@ -21,11 +21,11 @@ const SendNotification = async (req, res) => {
 
   try {
     // Check if the WeighingDevice with the specified ID exists
-    const weighingDeviceExists = await WeighingDeviceModel.exists({
+    const weghingDevice = await WeighingDeviceModel.findOne({
       _id: id,
     }).exec();
 
-    if (!weighingDeviceExists) {
+    if (!weghingDevice) {
       return res.status(404).json({
         status: false,
         error: {
@@ -83,11 +83,11 @@ const SendNotification = async (req, res) => {
       })),
     ];
 
-    const data = `Device Battery Percentage is ${sanitizedBatteryPercentage} <br/> Device Battery Voltage is ${sanitizedBatteryVoltage} <br/> Device Total Weight is ${sanitizedTotalWeight} <br/> Device Item Count is ${sanitizedItemCount} <br/>`;
+    const data = `<div style="background-color: #ff0000; color: #ffffff; text-align: center; padding: 10px;"><h1 style="margin: 0;">XORDER</h1></div> <br/> <br/> <h1><b>Dear User,</b></h1><br/><b>Carton has reached critical level.</b> <br/> <br/> Device Id : ${id} <br/> Device Title : ${weghingDevice.title} <br/> <br/> Device Item Count : ${sanitizedItemCount} <br/> Device Battery Percentage : ${sanitizedBatteryPercentage} <br/> Device Total Weight : ${sanitizedTotalWeight} </br> Device Battery Voltage : ${sanitizedBatteryVoltage} <br/><br/> The alert status is <b>CRITICAL</b> state, please do immediate response. <br/> <br/> <div style="background-color: #ff0000; color: #000000; text-align: center; padding: 10px;"> <p style="margin: 0;">Xpac Technologies PTE LTD.</p> <br/> <p style="margin: 0;">20 Gul Lane</p> </br> <p style="margin: 0;">Singapore, 629415</p> </div>`;
 
     const result = await SendEmail({
       recipients,
-      subject: `Details about the ${id}`,
+      subject: `Critical notification for the device "${weghingDevice.title}"`,
       htmlContent: data,
     });
 
