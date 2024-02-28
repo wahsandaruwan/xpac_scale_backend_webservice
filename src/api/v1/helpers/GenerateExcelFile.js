@@ -15,6 +15,7 @@ const GenerateExcelFile = async (columns, data, fileName, type) => {
     worksheet.addRow({
       id: data.id,
       title: data.title,
+      assignedProduct: data.assignedProduct,
       itemCount: data.itemCount,
       totalWeight: data.totalWeight,
       batteryPercentage: data.batteryPercentage,
@@ -27,6 +28,7 @@ const GenerateExcelFile = async (columns, data, fileName, type) => {
       worksheet.addRow({
         id: item._id,
         title: item.title,
+        assignedProduct: item.assignedProduct,
         itemCount: item.deviceData ? item.deviceData.itemCount : 0,
         totalWeight: item.deviceData ? item.deviceData.totalWeight : 0,
         batteryPercentage: item.deviceData
