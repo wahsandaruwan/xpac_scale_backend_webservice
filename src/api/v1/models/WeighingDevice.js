@@ -8,6 +8,10 @@ const WeighingDeviceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    assignedProduct: {
+      type: String,
+      required: true,
+    },
     imageUrl: {
       type: String,
     },
