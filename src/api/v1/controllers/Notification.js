@@ -83,7 +83,7 @@ const SendNotification = async (req, res) => {
       })),
     ];
 
-    const data = `<div style="background-color: #ff0000; color: #ffffff; text-align: center; padding: 10px;"><h1 style="margin: 0;">XORDER</h1></div> <br/> <h1><b>Dear User,</b></h1><b>Carton has reached critical level.</b> <br/> <br/> Device Id : ${id} <br/> Device Title : ${weghingDevice.title} <br/> <br/> Device Item Count : ${sanitizedItemCount} <br/> Device Battery Percentage : ${sanitizedBatteryPercentage} <br/> Device Total Weight : ${sanitizedTotalWeight} </br> Device Battery Voltage : ${sanitizedBatteryVoltage} <br/><br/> The alert status is <b>CRITICAL</b> state, please do immediate response. <br/> <br/> <div style="background-color: #ff0000; color: #000000; text-align: center; padding: 15px;"> <p style="margin: 0;">Xpac Technologies PTE LTD.</p></div>`;
+    const data = `<div style="background-color: #ff0000; color: #ffffff; text-align: center; padding: 10px;"><h1 style="margin: 0;">XORDER</h1></div> <br/> <h1><b>Dear User,</b></h1><b>Carton has reached critical level.</b> <br/> <br/> Device Id : ${id} <br/> Device Title : ${weghingDevice.title} <br/> Assigned Product : ${weghingDevice.assignedProduct} <br/> <br/> Device Item Count : ${sanitizedItemCount} <br/> Device Battery Percentage : ${sanitizedBatteryPercentage} <br/> Device Total Weight : ${sanitizedTotalWeight} </br> Device Battery Voltage : ${sanitizedBatteryVoltage} <br/><br/> The alert status is <b>CRITICAL</b> state, please do immediate response. <br/> <br/> <div style="background-color: #ff0000; color: #000000; text-align: center; padding: 15px;"> <p style="margin: 0;">Xpac Technologies PTE LTD.</p></div>`;
 
     const result = await SendEmail({
       recipients,
