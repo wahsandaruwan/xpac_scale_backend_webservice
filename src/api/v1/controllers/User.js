@@ -8,7 +8,8 @@ const { GenerateTokens, SendEmail } = require("../helpers");
 // ----------Conroller function to register new user----------
 const RegisterUser = async (req, res) => {
   // Request body
-  const { fullName, emailAddress, password, phoneNumber, userType } = req.body;
+  const { fullName, emailAddress, password, phoneNumber, imageUrl, userType } =
+    req.body;
 
   try {
     // Check if email or phone number already exist
@@ -33,6 +34,7 @@ const RegisterUser = async (req, res) => {
       emailAddress,
       password: hashedPassword,
       phoneNumber,
+      imageUrl,
       userType,
     });
 
