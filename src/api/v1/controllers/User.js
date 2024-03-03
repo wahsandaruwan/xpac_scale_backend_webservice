@@ -267,6 +267,7 @@ const UpdateUserSecure = async (req, res) => {
     emailAddress,
     password,
     phoneNumber,
+    imageUrl,
     userType,
     adminChange,
   } = req.body;
@@ -293,6 +294,7 @@ const UpdateUserSecure = async (req, res) => {
           emailAddress: emailAddress,
           password: hashedPassword,
           phoneNumber: phoneNumber,
+          imageUrl: imageUrl,
           userType: userType,
         },
       },
