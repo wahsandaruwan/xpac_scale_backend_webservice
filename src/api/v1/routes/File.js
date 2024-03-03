@@ -19,8 +19,8 @@ router.post(
 );
 
 // Save file to storage
-router.post(
-  "/delete",
+router.delete(
+  "/delete/:filename",
   // AuthenticateUser,
   // AuthorizeUser(["admin", "moderator"]),
   DeleteFile

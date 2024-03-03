@@ -32,26 +32,4 @@ const FileUpload = (field) => {
   };
 };
 
-const DeleteFileData = async () => {
-  try {
-    // Drop all collections in the database
-    await mongoose.connection.db.dropDatabase();
-
-    return {
-      status: true,
-      success: {
-        message: "Config database successfully.",
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      status: false,
-      error: {
-        message: "Failed to config the database.",
-      },
-    };
-  }
-};
-
-module.exports = { FileUpload, DeleteFileData };
+module.exports = { FileUpload };

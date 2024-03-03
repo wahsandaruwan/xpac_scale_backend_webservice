@@ -1,4 +1,6 @@
 const { DeleteFileData } = require("../helpers");
+const fs = require("fs");
+const path = require("path");
 
 // ----------Controller function to save file to storage----------
 const SaveFile = async (req, res) => {
@@ -25,13 +27,30 @@ const SaveFile = async (req, res) => {
 };
 
 const DeleteFile = async (req, res) => {
-  const result = await DeleteFileData();
+  const filePath = path.join(
+    __dirname,
+    "../../../../uploads",
+    req.params.filename
+  );
+  console.log(filePath);
 
-  return res.status(200).send({
-    status: true,
-    success: {
-      message: "Successfully sent emails!",
-    },
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      return res.status(400).json({
+        status: false,
+        error: {
+          message: "Failed to delete the file!",
+        },
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      success: {
+        message: "Successfully deleted the file!",
+      },
+      fileName: req.params.filename,
+    });
   });
 };
 
