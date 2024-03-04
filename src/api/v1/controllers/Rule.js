@@ -127,6 +127,10 @@ const GetRuleById = async (req, res) => {
 const UpdateRule = async (req, res) => {
   // Request parameters
   const { ruleId } = req.params;
+
+  // Request body
+  const { userId, deviceId } = req.body;
+
   try {
     const rule = await RuleModel.findOne({
       _id: ruleId,
@@ -137,6 +141,21 @@ const UpdateRule = async (req, res) => {
         error: { message: "Rule not found!" },
       });
     }
+
+    // Check if user id and device id combination is available
+    const ruleCombination = await RuleModel.findOne({
+      $and: [{ userId: userId }, { deviceId: deviceId }],
+    }).exec();
+
+    if (ruleCombination) {
+      return res.status(400).json({
+        status: false,
+        error: {
+          message: "User Id and Device Id combination already exists!",
+        },
+      });
+    }
+
     const updatedRule = await RuleModel.findOneAndUpdate(
       { _id: ruleId },
       {
