@@ -334,6 +334,242 @@ const GetWeighingDeviceDetailsById = async (req, res) => {
   }
 };
 
+// -----Modified for 30 days, 7 days and 24 hours-----
+
+// const GetWeighingDevicesDataById = async (req, res) => {
+//   // Request parameters
+//   const { deviceId } = req.params;
+//   const { period } = req.query;
+
+//   try {
+//     // Check if the WeighingDevice with the specified ID exists
+//     const weighingDeviceExists = await WeighingDeviceModel.exists({
+//       _id: deviceId,
+//     });
+
+//     if (!weighingDeviceExists) {
+//       return res.status(404).json({
+//         status: false,
+//         error: {
+//           message: "WeighingDevice not found with the specified ID.",
+//         },
+//       });
+//     }
+
+//     let aggregationPipeline = [
+//       {
+//         $match: {
+//           _id: new mongoose.Types.ObjectId(deviceId),
+//         },
+//       },
+//       {
+//         $lookup: {
+//           from: "weighingdatas",
+//           localField: "_id",
+//           foreignField: "weighingDeviceId",
+//           as: "deviceData",
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 1,
+//           title: 1,
+//           imageUrl: 1,
+//           userId: 1,
+//           deviceData: 1,
+//         },
+//       },
+//     ];
+
+//     if (period === "daily") {
+//       const today = new Date();
+//       var currentDate = new Date();
+//       currentDate.setDate(currentDate.getDate() - 1);
+
+//       aggregationPipeline.push(
+//         {
+//           $unwind: "$deviceData",
+//         },
+//         {
+//           $match: {
+//             "deviceData.createdAt": {
+//               $gte: currentDate,
+//               $lt: today,
+//             },
+//           },
+//         },
+//         {
+//           $sort: {
+//             "deviceData.createdAt": 1,
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: {
+//               _id: "$_id",
+//               hour: {
+//                 $hour: "$deviceData.createdAt",
+//               },
+//             },
+//             title: { $first: "$title" },
+//             imageUrl: { $first: "$imageUrl" },
+//             userId: { $first: "$userId" },
+//             deviceData: { $last: "$deviceData" },
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: "$_id._id",
+//             title: { $first: "$title" },
+//             imageUrl: { $first: "$imageUrl" },
+//             userId: { $first: "$userId" },
+//             deviceData: { $push: "$deviceData" },
+//           },
+//         }
+//       );
+//     } else if (period === "weekly") {
+//       const today = new Date();
+//       var startOfWeek = new Date();
+//       startOfWeek.setDate(startOfWeek.getDate() - 7);
+
+//       aggregationPipeline.push(
+//         {
+//           $unwind: "$deviceData",
+//         },
+//         {
+//           $match: {
+//             "deviceData.createdAt": {
+//               $gte: startOfWeek,
+//               $lt: today,
+//             },
+//           },
+//         },
+//         {
+//           $sort: {
+//             "deviceData.createdAt": 1,
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: {
+//               _id: "$_id",
+//               date: {
+//                 $dateToString: {
+//                   format: "%Y-%m-%d",
+//                   date: "$deviceData.createdAt",
+//                 },
+//               },
+//             },
+//             title: { $first: "$title" },
+//             imageUrl: { $first: "$imageUrl" },
+//             userId: { $first: "$userId" },
+//             deviceData: { $last: "$deviceData" },
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: "$_id._id",
+//             title: { $first: "$title" },
+//             imageUrl: { $first: "$imageUrl" },
+//             userId: { $first: "$userId" },
+//             deviceData: { $push: "$deviceData" },
+//           },
+//         }
+//       );
+//     } else if (period === "monthly") {
+//       const today = new Date();
+//       var startOfMonth = new Date();
+//       startOfMonth.setDate(startOfMonth.getDate() - 30);
+
+//       aggregationPipeline.push(
+//         {
+//           $unwind: "$deviceData",
+//         },
+//         {
+//           $match: {
+//             "deviceData.createdAt": {
+//               $gte: startOfMonth,
+//               $lt: today,
+//             },
+//           },
+//         },
+//         {
+//           $sort: {
+//             "deviceData.createdAt": 1,
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: {
+//               _id: "$_id",
+//               date: {
+//                 $dateToString: {
+//                   format: "%Y-%m-%d",
+//                   date: "$deviceData.createdAt",
+//                 },
+//               },
+//             },
+//             title: { $first: "$title" },
+//             imageUrl: { $first: "$imageUrl" },
+//             userId: { $first: "$userId" },
+//             deviceData: { $last: "$deviceData" },
+//           },
+//         },
+//         {
+//           $group: {
+//             _id: "$_id._id",
+//             title: { $first: "$title" },
+//             imageUrl: { $first: "$imageUrl" },
+//             userId: { $first: "$userId" },
+//             deviceData: { $push: "$deviceData" },
+//           },
+//         }
+//       );
+//     }
+
+//     // Add a $sort stage to sort by createdAt in ascending order
+//     aggregationPipeline.push(
+//       {
+//         $unwind: "$deviceData",
+//       },
+//       {
+//         $sort: {
+//           "deviceData.createdAt": 1,
+//         },
+//       },
+//       {
+//         $group: {
+//           _id: "$_id",
+//           title: { $first: "$title" },
+//           imageUrl: { $first: "$imageUrl" },
+//           userId: { $first: "$userId" },
+//           deviceData: { $push: "$deviceData" },
+//         },
+//       }
+//     );
+
+//     const weighingDeviceData = await WeighingDeviceModel.aggregate(
+//       aggregationPipeline
+//     );
+
+//     return res.status(200).json({
+//       status: true,
+//       weighingDeviceData,
+//       success: {
+//         message: "Successfully fetched the weighing devices!",
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err);
+//     return res.status(500).json({
+//       status: false,
+//       error: {
+//         message: "Failed to fetch the weighing devices!",
+//       },
+//     });
+//   }
+// };
+
 const GetWeighingDevicesDataById = async (req, res) => {
   // Request parameters
   const { deviceId } = req.params;
