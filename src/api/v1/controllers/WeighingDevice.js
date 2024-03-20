@@ -374,6 +374,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
         $project: {
           _id: 1,
           title: 1,
+          assignedProduct: 1,
           imageUrl: 1,
           userId: 1,
           deviceData: 1,
