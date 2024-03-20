@@ -548,6 +548,12 @@ const GetWeighingDevicesDataById = async (req, res) => {
       }
     );
 
+    aggregationPipeline.push({
+      $addFields: {
+        "deviceData.title": "$title",
+      },
+    });
+
     const weighingDeviceData = await WeighingDeviceModel.aggregate(
       aggregationPipeline
     );
