@@ -551,6 +551,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
     aggregationPipeline.push({
       $addFields: {
         "deviceData.title": "$title",
+        "deviceData.assignedProduct": "$assignedProduct",
       },
     });
 
