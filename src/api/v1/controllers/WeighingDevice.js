@@ -412,6 +412,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
               },
             },
             title: { $first: "$title" },
+            assignedProduct: { $first: "$assignedProduct" },
             imageUrl: { $first: "$imageUrl" },
             userId: { $first: "$userId" },
             deviceData: { $last: "$deviceData" },
@@ -421,6 +422,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
           $group: {
             _id: "$_id._id",
             title: { $first: "$title" },
+            assignedProduct: { $first: "$assignedProduct" },
             imageUrl: { $first: "$imageUrl" },
             userId: { $first: "$userId" },
             deviceData: { $push: "$deviceData" },
@@ -461,6 +463,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
               },
             },
             title: { $first: "$title" },
+            assignedProduct: { $first: "$assignedProduct" },
             imageUrl: { $first: "$imageUrl" },
             userId: { $first: "$userId" },
             deviceData: { $last: "$deviceData" },
@@ -470,6 +473,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
           $group: {
             _id: "$_id._id",
             title: { $first: "$title" },
+            assignedProduct: { $first: "$assignedProduct" },
             imageUrl: { $first: "$imageUrl" },
             userId: { $first: "$userId" },
             deviceData: { $push: "$deviceData" },
@@ -510,6 +514,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
               },
             },
             title: { $first: "$title" },
+            assignedProduct: { $first: "$assignedProduct" },
             imageUrl: { $first: "$imageUrl" },
             userId: { $first: "$userId" },
             deviceData: { $last: "$deviceData" },
@@ -519,6 +524,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
           $group: {
             _id: "$_id._id",
             title: { $first: "$title" },
+            assignedProduct: { $first: "$assignedProduct" },
             imageUrl: { $first: "$imageUrl" },
             userId: { $first: "$userId" },
             deviceData: { $push: "$deviceData" },
@@ -541,6 +547,7 @@ const GetWeighingDevicesDataById = async (req, res) => {
         $group: {
           _id: "$_id",
           title: { $first: "$title" },
+          assignedProduct: { $first: "$assignedProduct" },
           imageUrl: { $first: "$imageUrl" },
           userId: { $first: "$userId" },
           deviceData: { $push: "$deviceData" },
