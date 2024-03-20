@@ -80,7 +80,7 @@ app.post("/api/excel/:type", async (req, res) => {
   const { type } = req.params;
   // console.log(req.body);
   // Columns for excel
-  const columns = [
+  let columns = [
     { header: "Id", key: "id", width: 50 },
     { header: "Title", key: "title", width: 30 },
     { header: "Product", key: "assignedProduct", width: 30 },
@@ -96,6 +96,13 @@ app.post("/api/excel/:type", async (req, res) => {
     fileName = "device_data.xlsx";
   } else if (type == "devices") {
     fileName = "all_devices_data.xlsx";
+  } else if (type == "current_device_all") {
+    fileName = "all_data_of_current_device.xlsx";
+    columns.unshift({
+      header: "Created Date and Time",
+      key: "dateTime",
+      width: 50,
+    });
   }
 
   // Generate excel file
