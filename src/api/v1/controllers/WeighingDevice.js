@@ -552,6 +552,8 @@ const GetWeighingDevicesDataById = async (req, res) => {
       aggregationPipeline
     );
 
+    console.log(weighingDeviceData);
+
     return res.status(200).json({
       status: true,
       weighingDeviceData,
